@@ -1,0 +1,8 @@
+<div class="card" (swipeleft)="onSwipe('left')" (swiperight)="onSwipe('right')" (swipeup)="onSwipe('up')">
+    <img [src]="item.imageUrl" alt="Clothing item">
+    <div class="details">
+      <h2>{{ item.name }}</h2>
+      <p>{{ item.price | currency }}</p>
+    </div>
+  </div>
+  

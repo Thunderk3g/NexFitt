@@ -1,0 +1,4 @@
+<div class="swipe-container">
+  <app-swipe-card *ngFor="let item of items; let i = index" [item]="item" (swiped)="onSwiped($event, i)">
+  </app-swipe-card>
+</div>
