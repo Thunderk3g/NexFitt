@@ -1,19 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-main-screen',
   templateUrl: './main-screen.component.html',
   styleUrls: ['./main-screen.component.css']
 })
-export class MainScreenComponent implements OnInit {
+export class MainScreenComponent {
   items = [
     { name: 'Item 1', price: 49.99, imageUrl: 'path/to/image1.jpg' },
     { name: 'Item 2', price: 59.99, imageUrl: 'path/to/image2.jpg' },
     // Add more items as needed
   ];
-  currentIndex = 0;
-
-  ngOnInit() {}
 
   onSwiped(direction: string, index: number) {
     if (direction === 'left') {
