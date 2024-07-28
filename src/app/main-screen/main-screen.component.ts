@@ -21,12 +21,24 @@ export class MainScreenComponent implements OnInit {
   onRotateNext(): void {
     if (this.currentIndex < this.items.length - 1) {
       this.currentIndex++;
+    } else {
+      this.currentIndex = 0; // Loop back to the start
     }
   }
 
   onRotatePrevious(): void {
     if (this.currentIndex > 0) {
       this.currentIndex--;
+    } else {
+      this.currentIndex = this.items.length - 1; // Loop back to the end
     }
+  }
+
+  onPickUp(): void {
+    console.log('Picked up');
+  }
+
+  onDrop(): void {
+    console.log('Dropped');
   }
 }

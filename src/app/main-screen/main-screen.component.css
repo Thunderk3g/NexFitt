@@ -3,15 +3,47 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
+    overflow: hidden;
+    position: relative;
   }
   
   .swipe-card {
+    position: absolute;
     text-align: center;
-    transition: transform 0.5s ease;
+    transition: transform 0.5s ease, width 0.3s ease, height 0.3s ease;
+    width: 300px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1;
   }
   
   .swipe-card img {
     max-width: 100%;
     height: auto;
+    border-radius: 10px;
+  }
+  
+  .swipe-card.active {
+    z-index: 2;
+  }
+  
+  .swipe-card.behind {
+    z-index: 1;
+    transform: scale(0.95) translateY(20px);
+  }
+  
+  .swipe-card:active {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+  }
+  
+  .swipe-card.out-of-screen {
+    transition: transform 0.3s ease;
   }
   
