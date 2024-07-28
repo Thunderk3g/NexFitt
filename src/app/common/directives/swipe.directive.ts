@@ -17,7 +17,7 @@ export class SwipeDirective {
 
   @HostListener('touchstart', ['$event']) onSwipeStart(event: TouchEvent) {
     this.isDragging = true;
-    const touch = event.touches[0];  // Corrected the typo here
+    const touch = event.touches[0];
     this.initialX = touch.clientX;
     this.initialY = touch.clientY;
     this.pickUp.emit();
@@ -35,21 +35,31 @@ export class SwipeDirective {
 
     let actionTaken = false;
 
-    // Separate checks for each direction
-    if (this.isSwipeLeft(deltaX, screenWidth)) {
-      this.next.emit();
+    // Determine the direction based on x and y axis
+    const absDeltaX = Math.abs(deltaX);
+    const absDeltaY = Math.abs(deltaY);
+
+    if (absDeltaX > screenWidth * 0.2 || absDeltaY > screenHeight * 0.2) {
+      if (absDeltaX > absDeltaY) {
+        // Horizontal swipe
+        if (deltaX > 0) {
+          this.previous.emit(); // Swipe right
+        } else {
+          this.next.emit(); // Swipe left
+        }
+      } else {
+        // Vertical swipe
+        if (deltaY < 0) {
+          this.addToCart.emit(); // Swipe up
+          this.next.emit(); // Move to the next item after adding to cart
+        }
+      }
       actionTaken = true;
-    } else if (this.isSwipeRight(deltaX, screenWidth)) {
-      this.previous.emit();
-      actionTaken = true;
-    } else if (this.isSwipeUp(deltaY, screenHeight)) {
-      this.addToCart.emit();
-      this.next.emit(); // Move to the next item after adding to cart
-      actionTaken = true;
+      this.thresholdExceeded.emit(); // Emit event when threshold is exceeded
     }
 
     if (!actionTaken) {
-      this.renderer.setStyle(this.el.nativeElement, 'transform', 'translate(0, 0)');
+      this.resetPosition(); // Reset the card's position if no action is taken
     }
 
     this.drop.emit();
@@ -58,20 +68,23 @@ export class SwipeDirective {
   @HostListener('touchmove', ['$event']) onSwipeMove(event: TouchEvent) {
     if (this.isDragging) {
       const touch = event.touches[0];
-      const transform = `translate(${touch.clientX - this.initialX}px, ${touch.clientY - this.initialY}px)`;
-      this.renderer.setStyle(this.el.nativeElement, 'transform', transform);
+      const deltaX = touch.clientX - this.initialX;
+      const deltaY = touch.clientY - this.initialY;
+
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Horizontal swipe
+        const transform = `translateX(${deltaX}px)`;
+        this.renderer.setStyle(this.el.nativeElement, 'transform', transform);
+      } else {
+        // Vertical swipe
+        const transform = `translateY(${deltaY}px)`;
+        this.renderer.setStyle(this.el.nativeElement, 'transform', transform);
+      }
     }
   }
 
-  private isSwipeLeft(deltaX: number, screenWidth: number): boolean {
-    return deltaX < -screenWidth * 0.2;
-  }
-
-  private isSwipeRight(deltaX: number, screenWidth: number): boolean {
-    return deltaX > screenWidth * 0.2;
-  }
-
-  private isSwipeUp(deltaY: number, screenHeight: number): boolean {
-    return deltaY < -screenHeight * 0.2;
+  private resetPosition(): void {
+    this.renderer.setStyle(this.el.nativeElement, 'transition', 'transform 0.3s ease');
+    this.renderer.setStyle(this.el.nativeElement, 'transform', 'translate(0, 0)');
   }
 }
