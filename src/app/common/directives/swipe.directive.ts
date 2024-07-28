@@ -70,16 +70,12 @@ export class SwipeDirective {
       const touch = event.touches[0];
       const deltaX = touch.clientX - this.initialX;
       const deltaY = touch.clientY - this.initialY;
+      const screenWidth = window.innerWidth;
 
-      if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        // Horizontal swipe
-        const transform = `translateX(${deltaX}px)`;
-        this.renderer.setStyle(this.el.nativeElement, 'transform', transform);
-      } else {
-        // Vertical swipe
-        const transform = `translateY(${deltaY}px)`;
-        this.renderer.setStyle(this.el.nativeElement, 'transform', transform);
-      }
+      // Create an arc effect while dragging
+      const arcEffect = deltaX / screenWidth;
+      const transform = `translate(${deltaX}px, ${deltaY - Math.abs(arcEffect * deltaY)}px)`;
+      this.renderer.setStyle(this.el.nativeElement, 'transform', transform);
     }
   }
 
