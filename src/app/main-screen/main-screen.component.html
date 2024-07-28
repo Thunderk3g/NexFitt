@@ -1,9 +1,8 @@
 <div class="main-screen">
     <div
       class="swipe-card"
-      *ngFor="let item of items; let i = index"
-      [class.active]="i === currentIndex"
-      [class.behind]="i === currentIndex + 1"
+      *ngFor="let item of displayedItems; let i = index"
+      [class.active]="i === 0"
       swipe
       (next)="onRotateNext()"
       (previous)="onRotatePrevious()"
