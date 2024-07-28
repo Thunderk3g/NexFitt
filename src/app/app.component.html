@@ -1,1 +1,5 @@
-<router-outlet></router-outlet>
+<div *ngIf="showInstallButton" class="install-banner">
+    <button (click)="installPWA()">Add to Home Screen</button>
+  </div>
+  <router-outlet></router-outlet>
+  

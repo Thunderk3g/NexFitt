@@ -13,6 +13,7 @@ export class MainScreenComponent implements OnInit {
     // Add more items as needed
   ];
   currentIndex = 0;
+  cart: any[] = [];
 
   constructor() {}
 
@@ -40,5 +41,22 @@ export class MainScreenComponent implements OnInit {
 
   onDrop(): void {
     console.log('Dropped');
+  }
+
+  onAddToCart(): void {
+    this.cart.push(this.items[this.currentIndex]);
+    console.log('Added to cart:', this.items[this.currentIndex]);
+  }
+
+  onThresholdExceeded(): void {
+    console.log('Threshold exceeded');
+  }
+
+  onLike(): void {
+    this.onRotateNext();
+  }
+
+  onDislike(): void {
+    this.onRotatePrevious();
   }
 }

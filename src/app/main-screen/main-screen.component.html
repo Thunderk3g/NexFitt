@@ -9,10 +9,16 @@
       (previous)="onRotatePrevious()"
       (pickUp)="onPickUp()"
       (drop)="onDrop()"
+      (addToCart)="onAddToCart()"
+      (thresholdExceeded)="onThresholdExceeded()"
     >
       <img [src]="item.image" alt="{{ item.name }}">
       <h3>{{ item.name }}</h3>
-      <p>{{ item.price | currency }}</p>
+      <p>{{ item.price | currency }}"></p>
+    </div>
+    <div class="buttons">
+      <button (click)="onDislike()">Dislike</button>
+      <button (click)="onLike()">Like</button>
     </div>
   </div>
   

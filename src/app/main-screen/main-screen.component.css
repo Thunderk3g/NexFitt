@@ -46,4 +46,17 @@
   .swipe-card.out-of-screen {
     transition: transform 0.3s ease;
   }
+  .buttons {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+  }
   
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }

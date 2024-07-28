@@ -4,14 +4,14 @@ import { Directive, ElementRef, EventEmitter, HostListener, Output, Renderer2 } 
 export class SwipeDirective {
   @Output() next = new EventEmitter<void>();
   @Output() previous = new EventEmitter<void>();
+  @Output() addToCart = new EventEmitter<void>();
   @Output() pickUp = new EventEmitter<void>();
   @Output() drop = new EventEmitter<void>();
+  @Output() thresholdExceeded = new EventEmitter<void>();
 
   private swipeCoord = [0, 0];
   private swipeTime = new Date().getTime();
   private isDragging = false;
-  private initialX = 0;
-  private initialY = 0;
 
   constructor(private el: ElementRef, private renderer: Renderer2) {}
 
@@ -39,27 +39,44 @@ export class SwipeDirective {
       this.swipeCoord = coord;
       this.swipeTime = time;
       this.isDragging = true;
-      this.initialX = this.el.nativeElement.getBoundingClientRect().left;
-      this.initialY = this.el.nativeElement.getBoundingClientRect().top;
       this.pickUp.emit();
     } else if (when === 'end') {
       this.isDragging = false;
       const direction = [coord[0] - this.swipeCoord[0], coord[1] - this.swipeCoord[1]];
       const duration = time - this.swipeTime;
       const screenWidth = window.innerWidth;
-      const currentX = this.el.nativeElement.getBoundingClientRect().left;
+      const screenHeight = window.innerHeight;
 
-      if (duration < 1000 && Math.abs(direction[0]) > screenWidth / 2) {
-        const swipeDir = direction[0] < 0 ? 'next' : 'previous';
-        if (swipeDir === 'next') {
-          this.next.emit();
-        } else {
-          this.previous.emit();
+      let actionTaken = false;
+
+      if (duration < 1000) {
+        if (Math.abs(direction[0]) > screenWidth * 0.25 || Math.abs(direction[1]) > screenHeight * 0.25) {
+          if (Math.abs(direction[0]) > screenWidth * 0.25) {
+            const swipeDir = direction[0] < 0 ? 'next' : 'previous';
+            if (swipeDir === 'next') {
+              this.next.emit();
+            } else {
+              this.previous.emit();
+            }
+            this.thresholdExceeded.emit(); // Emit event when threshold is exceeded
+            actionTaken = true;
+          } else if (direction[1] < -screenHeight * 0.25) {
+            this.addToCart.emit();
+            this.next.emit(); // Move to the next item after adding to cart
+            this.thresholdExceeded.emit(); // Emit event when threshold is exceeded
+            actionTaken = true;
+          }
         }
-      } else {
-        // If the swipe distance is less than 50%, revert the position
+
+        if (Math.abs(direction[0]) > screenWidth * 0.5 || Math.abs(direction[1]) > screenHeight * 0.5) {
+          this.thresholdExceeded.emit(); // Emit event when threshold is exceeded
+        }
+      }
+
+      if (!actionTaken) {
         this.renderer.setStyle(this.el.nativeElement, 'transform', 'translate(0, 0)');
       }
+
       this.drop.emit();
     }
   }
