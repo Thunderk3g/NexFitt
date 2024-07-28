@@ -1,5 +1,13 @@
-<div class="swipe-container">
-    <app-swipe-card *ngFor="let item of items; let i = index" [item]="item" (swiped)="onSwiped($event, i)">
-    </app-swipe-card>
+<div class="main-screen">
+    <div
+      class="swipe-card"
+      swipe
+      (next)="onRotateNext()"
+      (previous)="onRotatePrevious()"
+    >
+      <img [src]="items[currentIndex].image" alt="{{ items[currentIndex].name }}">
+      <h3>{{ items[currentIndex].name }}</h3>
+      <p>{{ items[currentIndex].price | currency }}</p>
+    </div>
   </div>
   

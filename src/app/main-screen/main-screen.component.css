@@ -1,0 +1,17 @@
+.main-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .swipe-card {
+    text-align: center;
+    transition: transform 0.5s ease;
+  }
+  
+  .swipe-card img {
+    max-width: 100%;
+    height: auto;
+  }
+  

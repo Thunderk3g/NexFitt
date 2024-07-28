@@ -7,9 +7,9 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 export class SwipeCardComponent {
   @Input() item: any;
-  @Output() swiped = new EventEmitter<string>();
+  @Output() swiped = new EventEmitter<any>();
 
-  onSwipe(direction: string) {
+  onSwipe(direction: any) {
     this.swiped.emit(direction);
   }
 }
