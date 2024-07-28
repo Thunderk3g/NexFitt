@@ -22,6 +22,7 @@ export class SwipeDirective {
     this.initialX = touch.clientX;
     this.initialY = touch.clientY;
     this.pickUp.emit();
+    this.disableScroll(); // Disable scrolling when dragging starts
   }
 
   @HostListener('touchend', ['$event']) onSwipeEnd(event: TouchEvent) {
@@ -65,6 +66,7 @@ export class SwipeDirective {
     }
 
     this.drop.emit();
+    this.enableScroll(); // Enable scrolling when dragging ends
 
     // Log the final position of the card when dropped
     console.log(`Card dropped at position: X=${deltaX}, Y=${deltaY}`);
@@ -92,5 +94,13 @@ export class SwipeDirective {
   private resetPosition(): void {
     this.renderer.setStyle(this.el.nativeElement, 'transition', 'transform 0.3s ease');
     this.renderer.setStyle(this.el.nativeElement, 'transform', 'translate(0, 0)');
+  }
+
+  private disableScroll(): void {
+    document.body.classList.add('no-scroll');
+  }
+
+  private enableScroll(): void {
+    document.body.classList.remove('no-scroll');
   }
 }
