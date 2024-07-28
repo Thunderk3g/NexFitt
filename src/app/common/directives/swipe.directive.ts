@@ -5,6 +5,7 @@ export class SwipeDirective {
   @Output() next = new EventEmitter<void>();
   @Output() previous = new EventEmitter<void>();
   @Output() addToCart = new EventEmitter<void>();
+  @Output() addToPreferences = new EventEmitter<void>(); // New event emitter
   @Output() pickUp = new EventEmitter<void>();
   @Output() drop = new EventEmitter<void>();
   @Output() thresholdExceeded = new EventEmitter<void>();
@@ -43,14 +44,15 @@ export class SwipeDirective {
       if (absDeltaX > absDeltaY) {
         // Horizontal swipe
         if (deltaX > 0) {
-          this.previous.emit(); // Swipe right
+          this.addToPreferences.emit(); // Swipe right - add to preferences
+          this.next.emit(); // Swipe right - move to next item
         } else {
           this.next.emit(); // Swipe left
         }
       } else {
         // Vertical swipe
         if (deltaY < 0) {
-          this.addToCart.emit(); // Swipe up
+          this.addToCart.emit(); // Swipe up - add to cart
           this.next.emit(); // Move to the next item after adding to cart
         }
       }
@@ -63,6 +65,9 @@ export class SwipeDirective {
     }
 
     this.drop.emit();
+
+    // Log the final position of the card when dropped
+    console.log(`Card dropped at position: X=${deltaX}, Y=${deltaY}`);
   }
 
   @HostListener('touchmove', ['$event']) onSwipeMove(event: TouchEvent) {
@@ -75,7 +80,12 @@ export class SwipeDirective {
       // Create an arc effect while dragging
       const arcEffect = deltaX / screenWidth;
       const transform = `translate(${deltaX}px, ${deltaY - Math.abs(arcEffect * deltaY)}px)`;
+
+      // Set the transform style to create the drag effect
       this.renderer.setStyle(this.el.nativeElement, 'transform', transform);
+
+      // Log the current position of the card
+      console.log(`Card position: X=${deltaX}, Y=${deltaY}`);
     }
   }
 

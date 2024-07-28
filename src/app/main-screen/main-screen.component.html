@@ -1,11 +1,15 @@
 <div class="main-screen">
+    <div class="counters">
+      <span>Cart: {{ cart.length }}</span>
+      <span>Preferences: {{ preferenceCount }}</span>
+    </div>
     <div
       class="swipe-card"
       *ngFor="let item of displayedItems; let i = index"
       [class.active]="i === 0"
       swipe
       (next)="onRotateNext()"
-      (previous)="onRotatePrevious()"
+      (previous)="onAddToPreferences()"
       (pickUp)="onPickUp()"
       (drop)="onDrop()"
       (addToCart)="onAddToCart()"

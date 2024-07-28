@@ -20,6 +20,7 @@ export class MainScreenComponent implements OnInit {
   ];
   
   cart: any[] = [];
+  preferenceCount = 0;
   displayedItems: any[] = [];
   currentIndex = 0;
   itemsPerLoad = 5;
@@ -40,10 +41,10 @@ export class MainScreenComponent implements OnInit {
     if (this.displayedItems.length === 0) {
       return;
     }
+    this.displayedItems.shift(); // Remove the first item
     if (this.currentIndex < this.allItems.length) {
       this.loadMoreItems();
     }
-    this.displayedItems.shift(); // Remove the first item
   }
 
   onRotatePrevious(): void {
@@ -59,8 +60,15 @@ export class MainScreenComponent implements OnInit {
   }
 
   onAddToCart(): void {
-    this.cart.push(this.displayedItems[0]);
-    console.log('Added to cart:', this.displayedItems[0]);
+    if (this.displayedItems.length > 0) {
+      this.cart.push(this.displayedItems[0]);
+      console.log('Added to cart:', this.displayedItems[0]);
+    }
+  }
+
+  onAddToPreferences(): void {
+    this.preferenceCount++;
+    console.log('Added to preferences');
   }
 
   onThresholdExceeded(): void {
@@ -68,6 +76,7 @@ export class MainScreenComponent implements OnInit {
   }
 
   onLike(): void {
+    this.onAddToPreferences();
     this.onRotateNext();
   }
 
